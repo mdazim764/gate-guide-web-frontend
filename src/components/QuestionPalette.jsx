@@ -1,3 +1,4 @@
+// src/components/QuestionPalette.jsx
 import React from 'react';
 import { useTest } from '../context/TestContext';
 

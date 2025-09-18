@@ -1,3 +1,4 @@
+// src/components/VirtualCalculator.jsx
 import React, { useState } from 'react';
 
 const VirtualCalculator = ({ onClose }) => {

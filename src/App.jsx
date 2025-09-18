@@ -17,9 +17,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <TestProvider>
+    <TestProvider>
+      <Router>
+        <AuthProvider>
           <Routes>
             {/* The REAL login page */}
             <Route path="/login" element={<LoginPage />} />
@@ -69,9 +69,9 @@ function App() {
             {/* Redirect any other path to the home page */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
-        </TestProvider>
-      </AuthProvider>
-    </Router>
+        </AuthProvider>
+      </Router>
+    </TestProvider>
   );
 }
 

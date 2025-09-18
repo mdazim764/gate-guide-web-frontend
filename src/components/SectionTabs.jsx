@@ -1,3 +1,4 @@
+// src/components/SectionTabs.jsx
 import React from 'react';
 
 const SectionTabs = ({ sections, currentSection, setCurrentSection }) => {
