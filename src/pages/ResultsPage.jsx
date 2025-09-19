@@ -216,10 +216,10 @@ const incorrectCount = feedback?.incorrectCount || (questions.length - correctCo
               to="/" 
               className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded"
             >
-              Back to Home
+              Check History
             </Link>
             <Link 
-              to="/test" 
+              to="/new-test" 
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded"
             >
               Try Another Test
