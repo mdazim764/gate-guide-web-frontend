@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       setLoading(false);
       
-      navigate('/'); // Redirect to homepage on successful login
+      navigate('/'); // Redirect to history on successful login
       return true;
 
     } catch (error) {

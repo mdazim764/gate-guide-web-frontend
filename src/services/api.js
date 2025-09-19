@@ -153,6 +153,9 @@ export const getSyllabusTree = () => {
   return api.get("/academic/syllabus-tree");
 };
 
+// --- NEW FUNCTION ---
+export const getAvailableTopics = () => api.get("/knowledge/available-topics");
+
 export const submitQuiz = (quizId, submissionData) => {
   return api.post(`/quizzes/${quizId}/submit`, submissionData);
 };
@@ -160,6 +163,12 @@ export const submitQuiz = (quizId, submissionData) => {
 export const getAttemptDetail = (attemptId) => {
   return api.get(`/quizzes/attempts/${attemptId}`);
 };
+
+// Fetches the list of all past attempts
+export const getAllAttempts = () => api.get("/quizzes/attempts/all");
+
+// Fetches a specific quiz's data (questions, etc.) for a re-attempt
+export const getQuizForRetake = (quizId) => api.get(`/quizzes/${quizId}`);
 
 api.login = (credentials) => api.post("/auth/login", credentials);
 

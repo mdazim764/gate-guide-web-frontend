@@ -252,8 +252,8 @@ const TestPage = () => {
 
   if (!questions || questions.length === 0) {
     return (
-        <div className="flex items-center justify-center h-screen">
-            <p className="text-2xl">Loading test...</p>
+        <div className="flex items-center justify-center h-screen bg-gray-100">
+            <p className="text-2xl animate-pulse">Loading Test Environment...</p>
         </div>
     );
   }
@@ -266,5 +266,3 @@ const TestPage = () => {
 };
 
 export default TestPage;
-
-

@@ -6,6 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import HomePage from "./pages/HomePage";
+import HistoryPage from './pages/HistoryPage';
 import LoginPage from "./pages/LoginPage";
 import DummyLoginPage from "./pages/DummyLoginPage";
 import InstructionsPage from "./pages/InstructionsPage";
@@ -17,22 +18,16 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <TestProvider>
-      <Router>
-        <AuthProvider>
+    <Router>
+      <AuthProvider>
+        <TestProvider>
           <Routes>
             {/* The REAL login page */}
             <Route path="/login" element={<LoginPage />} />
 
             {/* Application core routes are protected */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <HomePage />
-                </ProtectedRoute>
-              }
-            />
+         <Route path="/" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} /> 
+            <Route path="/new-test" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
             <Route
               path="/dummylogin/:quizId"
               element={
@@ -69,9 +64,9 @@ function App() {
             {/* Redirect any other path to the home page */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
-        </AuthProvider>
-      </Router>
-    </TestProvider>
+        </TestProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

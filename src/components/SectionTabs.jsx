@@ -3,15 +3,16 @@ import React from 'react';
 
 const SectionTabs = ({ sections, currentSection, setCurrentSection }) => {
     return (
-        <div className="bg-gray-100 p-1 rounded-lg shadow-inner flex items-center space-x-2">
+        <div className="flex items-center space-x-1">
             {sections.map(section => (
                 <button
                     key={section.name}
                     onClick={() => setCurrentSection(section.name)}
-                    className={`px-4 py-2 text-sm font-bold rounded-md transition-all ${
+                    // Classes meticulously matched to the official UI
+                    className={`px-4 py-2 text-sm font-bold rounded-t-md border-b-0 transition-all ${
                         currentSection === section.name 
-                        ? 'bg-blue-600 text-white shadow-md'
-                        : 'bg-transparent text-gray-700 hover:bg-gray-200'
+                        ? 'bg-[#31708f] text-white shadow-inner' // Active state: dark blue
+                        : 'bg-[#e4eff7] text-[#31708f] border border-gray-300 hover:bg-gray-300' // Inactive state: light blue
                     }`}
                 >
                     {section.name}
