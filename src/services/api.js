@@ -170,6 +170,11 @@ export const getAllAttempts = () => api.get("/quizzes/attempts/all");
 // Fetches a specific quiz's data (questions, etc.) for a re-attempt
 export const getQuizForRetake = (quizId) => api.get(`/quizzes/${quizId}`);
 
+// --- NEW YOUTUBE LIBRARY FUNCTIONS ---
+export const getPlaylists = () => api.get("/youtube/playlists");
+export const getPlaylistVideos = (playlistId) =>
+  api.get(`/youtube/playlists/${playlistId}/videos`);
+
 api.login = (credentials) => api.post("/auth/login", credentials);
 
 export default api;

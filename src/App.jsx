@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import DashboardPage from './pages/DashboardPage';
 import HomePage from "./pages/HomePage";
 import HistoryPage from './pages/HistoryPage';
 import LoginPage from "./pages/LoginPage";
@@ -15,6 +16,9 @@ import ResultsPage from "./pages/ResultsPage";
 import { AuthProvider } from "./context/AuthContext";
 import { TestProvider } from "./context/TestContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PlaylistPage from './pages/PlaylistPage';
+import VideoListPage from './pages/VideoListPage';
+import PlayerPage from './pages/PlayerPage';
 
 function App() {
   return (
@@ -26,8 +30,12 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
 
             {/* Application core routes are protected */}
-         <Route path="/" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} /> 
+         <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
             <Route path="/new-test" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+            <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
+            <Route path="/library" element={<ProtectedRoute><PlaylistPage /></ProtectedRoute>} />
+            <Route path="/library/playlist/:playlistId" element={<ProtectedRoute><VideoListPage /></ProtectedRoute>} />
+            <Route path="/video/:videoId" element={<ProtectedRoute><PlayerPage /></ProtectedRoute>} />
             <Route
               path="/dummylogin/:quizId"
               element={
