@@ -1,59 +1,9 @@
-// import axios from "axios";
-
 // const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
-// const api = axios.create({
-//   baseURL: API_URL,
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-// });
-
-// // Request Interceptor to add the token to every request
-// api.interceptors.request.use(
-//   (config) => {
-//     const token = localStorage.getItem("accessToken");
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
-
-// // We won't add the refresh token logic yet to keep this step simpler,
-// // but this is where it would go, mirroring your mobile app.
-
-// // --- The rest of your functions ---
-// // THIS FUNCTION IS MODIFIED - It now sends options, not a JSON blob
-// export const generateQuiz = (options) => {
-//   return api.post("/quizzes/generate", options);
-// };
-
-// // THIS IS A NEW FUNCTION - To populate our UI
-// export const getSyllabusTree = () => {
-//   return api.get("/academic/syllabus-tree");
-// };
-
-// export const submitQuiz = (quizId, submissionData) => {
-//   return api.post(`/quizzes/${quizId}/submit`, submissionData);
-// };
-
-// export const getQuizResult = (attemptId) => {
-//   return api.get(`/results/${attemptId}`);
-// };
-
-// // Add login endpoint for AuthContext
-// api.login = (credentials) => api.post("/auth/login", credentials);
-
-// export default api;
 
 import axios from "axios";
 
 const API_URL =
-  import.meta.env.VITE_API_URL || "http://192.168.142.245:3000/api";
+  import.meta.env.VITE_API_URL || "https://gate-guide-api.onrender.com/api";
 
 const api = axios.create({
   baseURL: API_URL,
