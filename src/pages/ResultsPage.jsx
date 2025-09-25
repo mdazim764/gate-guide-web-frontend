@@ -216,7 +216,7 @@ const incorrectCount = feedback?.incorrectCount || (questions.length - correctCo
               to="/" 
               className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded"
             >
-              Check History
+              Return Home
             </Link>
             <Link 
               to="/new-test" 
