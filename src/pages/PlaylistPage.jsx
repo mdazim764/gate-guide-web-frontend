@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getPlaylists } from '../services/api';
+import { getPlaylists, getSyllabusTree } from '../services/api'; // Add this import
 import VirtualCalculator from '../components/VirtualCalculator';
 
 const PlaylistPage = () => {
@@ -14,12 +14,16 @@ const PlaylistPage = () => {
   const [selectedSubject, setSelectedSubject] = useState('all');
   const [showCalculator, setShowCalculator] = useState(false);
   const [subjects, setSubjects] = useState([]);
+  const [allSubjects, setAllSubjects] = useState([]);
 
   useEffect(() => {
+    // Fetch playlists
     const fetchPlaylists = async () => {
       try {
         const response = await getPlaylists();
         setPlaylists(response.data);
+
+        // console.log('Fetched playlists:', response.data);
         
         // Extract unique subjects from playlists
         const uniqueSubjects = new Map();
@@ -35,6 +39,7 @@ const PlaylistPage = () => {
           id,
           name
         }));
+        // console.log('Extracted subjects:', subjectsList);
         
         setSubjects(subjectsList);
       } catch (err) {
@@ -43,17 +48,45 @@ const PlaylistPage = () => {
         setLoading(false);
       }
     };
+
+    // Fetch subjects
+    const fetchSubjects = async () => {
+      try {
+        const res = await getSyllabusTree();
+        setAllSubjects(res.data.map(s => ({ id: s.id, name: s.name })));
+      } catch (err) {
+        // Optionally handle error
+        console.error('Failed to load subjects:', err);
+      }
+    };
+
     fetchPlaylists();
+    fetchSubjects();
   }, []);
 
-  // Function to get a subject name from ID (mock function)
+  // Updated getSubjectName function
   const getSubjectName = (subjectId) => {
-    const subjectMap = {
-      '5448bb12-796e-4414-ad56-4272f7839819': 'Operating Systems',
-      '20a6cc89-994c-4984-b8c7-88ae9daf213f': 'Data Structures & Algorithms',
-    };
-    return subjectMap[subjectId] || null;
+    const subject = allSubjects.find(s => s.id === subjectId);
+    return subject ? subject.name : 'Unknown Subject';
   };
+
+  useEffect(() => {
+    // Extract unique subjects from playlists using the updated getSubjectName
+    if (playlists.length && allSubjects.length) {
+      const uniqueSubjects = new Map();
+      playlists.forEach(playlist => {
+        if (playlist.subjectId && !uniqueSubjects.has(playlist.subjectId)) {
+          const subjectName = getSubjectName(playlist.subjectId);
+          uniqueSubjects.set(playlist.subjectId, subjectName);
+        }
+      });
+      const subjectsList = Array.from(uniqueSubjects).map(([id, name]) => ({
+        id,
+        name
+      }));
+      setSubjects(subjectsList);
+    }
+  }, [playlists, allSubjects]);
 
   // Filter playlists based on search term and selected subject
   const filteredPlaylists = useMemo(() => {

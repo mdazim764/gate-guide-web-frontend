@@ -21,7 +21,7 @@ const ResultsPage = () => {
     const fetchResults = async () => {
       try {
         const response = await getAttemptDetail(attemptId);
-        console.log('Fetched attempt details:', response.data);
+        // console.log('Fetched attempt details:', response.data);
         setResults(response.data);
       } catch (err) {
         setError('Failed to fetch results. Please try again later.');
