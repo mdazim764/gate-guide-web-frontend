@@ -6,8 +6,9 @@ import { getAttemptDetail } from '../services/api';
 // --- NEW HELPER COMPONENT ---
 // This component will safely render strings that contain simple HTML tags.
 const RenderHTML = ({ content }) => {
-  // A simple markdown-to-HTML conversion for bolding
-  const formattedContent = content?.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') || '';
+  if (!content) return null;
+  const strContent = typeof content === 'string' ? content : String(content);
+  const formattedContent = strContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   return <span dangerouslySetInnerHTML={{ __html: formattedContent }} />;
 };
 

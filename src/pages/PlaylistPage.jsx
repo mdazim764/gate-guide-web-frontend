@@ -198,7 +198,7 @@ const PlaylistPage = () => {
               >
                 <option value="all">All Subjects</option>
                 {subjects.map((subject) => (
-                  <option key={subject.id} value={subject.id}>{subject.name}</option>
+                  <option key={subject.id} value={subject.id} className='max-w-full'>{subject.name}</option>
                 ))}
               </select>
             </div>
