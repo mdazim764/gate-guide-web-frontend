@@ -127,4 +127,22 @@ export const getPlaylistVideos = (playlistId) =>
 
 api.login = (credentials) => api.post("/auth/login", credentials);
 
+// Add this function to your existing API service
+export const getMyQuizzes = async (page = 1, limit = 10, filters = {}) => {
+  let url = `/quizzes/my-quizzes?page=${page}&limit=${limit}`;
+
+  // Add any filter parameters
+  if (filters.status) {
+    url += `&status=${filters.status}`;
+  }
+  if (filters.subject) {
+    url += `&subject=${filters.subject}`;
+  }
+  if (filters.type) {
+    url += `&type=${filters.type}`;
+  }
+
+  return await api.get(url);
+};
+
 export default api;

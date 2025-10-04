@@ -19,6 +19,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PlaylistPage from './pages/PlaylistPage';
 import VideoListPage from './pages/VideoListPage';
 import PlayerPage from './pages/PlayerPage';
+import QuizLibraryPage from './pages/QuizLibraryPage';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             {/* Application core routes are protected */}
          <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
             <Route path="/new-test" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+            <Route path="/quiz-library" element={<ProtectedRoute><QuizLibraryPage /></ProtectedRoute>} />
             <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
             <Route path="/library" element={<ProtectedRoute><PlaylistPage /></ProtectedRoute>} />
             <Route path="/library/playlist/:playlistId" element={<ProtectedRoute><VideoListPage /></ProtectedRoute>} />

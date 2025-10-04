@@ -67,12 +67,14 @@ const TestInterface = () => {
     }, [timeRemaining, setTimeRemaining, handleSubmit]);
 
     // Format time in HH:MM:SS format as shown in the GATE portal
-    const formatTime = (seconds) => {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const remainingSeconds = seconds % 60;
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-    };
+  const formatTime = (seconds) => {
+    // Convert total seconds to total minutes and remaining seconds
+    const totalMinutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    
+    // Format as mmm:ss with padded zeros
+    return `${totalMinutes.toString().padStart(3, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
     
     const handleClearResponse = () => {
         const question = questions[currentQuestionIndex];
@@ -116,7 +118,7 @@ const TestInterface = () => {
     return (
         <div className="flex flex-col h-screen font-sans bg-[#dfe6ea]">
             {/* Main chrome-like header */}
-            <header className="bg-[#1e2937] text-white py-1.5 px-4 flex items-center justify-between border-b border-gray-700">
+            {/* <header className="bg-[#1e2937] text-white py-1.5 px-4 flex items-center justify-between border-b border-gray-700">
                 <div className="flex items-center">
                     <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
@@ -136,7 +138,7 @@ const TestInterface = () => {
                         </svg>
                     </button>
                 </div>
-            </header>
+            </header> */}
 
             {/* URL Bar (fake)
             <div className="bg-[#1e2937] text-gray-300 px-4 py-1.5 flex items-center text-sm border-b border-gray-700">
@@ -169,23 +171,46 @@ const TestInterface = () => {
             </div>
 
             {/* Main tab bar */}
-            <div className="bg-[#f8f8f8] border-b flex items-center">
+            <div className="bg-[#f8f8f8] border-b flex items-center justify-between">
+                {/* Left: Tab title */}
                 <div className="flex flex-1 overflow-hidden">
                     <div className="px-4 py-2 bg-[#2d90e3] text-white text-sm font-semibold flex items-center relative whitespace-nowrap">
                         CS1 Computer Science
                         <div className="w-5 h-5 bg-[#5dabef] text-white rounded-full flex items-center justify-center ml-1 text-xs font-bold">i</div>
                     </div>
                 </div>
-                {/* Profile and time display */}
-                <div className="flex items-center">
-                    <div className="flex items-center mr-3">
+                
+                {/* Middle: Calculator button and time display in 2 rows */}
+                <div className="flex flex-col items-center mx-4">
+                    {/* Calculator button */}
+                    <button 
+                        onClick={toggleCalculator}
+                        className="flex items-center justify-center bg-blue-500 text-white px-3 py-1 mb-1 rounded-md shadow-sm hover:bg-blue-600 text-xs font-medium"
+                    >
+                        <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm0 2h8v2H6V4zm0 3h8v1H6V7zm0 2h8v1H6V9zm0 2h4v4H6v-4zm5 0h3v1h-3v-1zm0 2h3v1h-3v-1z" clipRule="evenodd"/>
+                        </svg>
+                        Scientific Calculator
+                    </button>
+                    
+                    {/* Time display */}
+                    <div className="flex items-center">
+                        <div className="mr-2 text-sm font-medium text-gray-600">Time Left:</div>
+                        <div className="text-base font-bold text-red-600">{formatTime(timeRemaining)}</div>
+                    </div>
+                </div>
+                
+                {/* Right: User profile */}
+                <div className="flex items-center w-80 justify-end pr-4">
+                    <div className="flex items-center">
                         <div className="text-right mr-2">
-                            <div className="font-bold">John Smith</div>
+                            <div className="font-bold truncate max-w-[150px]">{user?.name || "User"}</div>
+                            <div className="text-xs text-gray-500">Candidate</div>
                         </div>
                         <img 
-                            src="/public/azim.png" 
+                            src="/azim.png" 
                             alt="User profile"
-                            className="w-16 h-16 rounded bg-white border border-gray-300 p-0.5"
+                            className="w-16 h-16 rounded-full bg-white border border-gray-300 p-0.5"
                             onError={(e) => {
                                 e.target.onerror = null;
                                 e.target.src = "https://via.placeholder.com/40?text=User";
@@ -196,14 +221,41 @@ const TestInterface = () => {
             </div>
 
             {/* Time display in header */}
-            <div className="bg-white border-b flex justify-end items-center py-1 px-4">
+            {/* <div className="bg-white border-b flex justify-end items-center py-1 px-4">
                 <div className="flex items-center">
                     <div className="mr-2 text-sm font-medium text-gray-600">Time Left :</div>
                     <div className="text-base font-bold">{formatTime(timeRemaining)}</div>
                 </div>
-            </div>
+            </div> */}
 
             {/* Section tabs (General Aptitude, etc.) */}
+            {/* <div className="bg-gray-100 border-b flex items-center">
+                <button className="bg-gray-300 text-gray-700 p-1 mx-1">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"/>
+                    </svg>
+                </button>
+                <div className="flex overflow-x-auto">
+                    <div className={`px-4 py-2 font-medium text-sm flex items-center border-r whitespace-nowrap ${currentSection === 'General Aptitude' ? 'bg-white text-blue-800 border-b-2 border-b-blue-500' : 'bg-blue-50 text-gray-700'}`}>
+                        General Aptitude
+                        <div className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center ml-1 text-xs font-bold text-blue-800">i</div>
+                    </div>
+                    <div className={`px-4 py-2 font-medium text-sm flex items-center border-r whitespace-nowrap ${currentSection === 'CS1 Computer Science' ? 'bg-white text-blue-800 border-b-2 border-b-blue-500' : 'bg-blue-50 text-gray-700'}`}>
+                        CS1 Computer Science...
+                        <div className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center ml-1 text-xs font-bold text-blue-800">i</div>
+                    </div>
+                </div>
+                <button className="bg-gray-300 text-gray-700 p-1 mx-1">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
+                    </svg>
+                </button>
+            </div> */}
+
+            {/* Main content */}
+            <main className="flex-1 overflow-y-hidden p-2 pt-0 pb-0 flex gap-2">
+                <div className={`flex-1 bg-white p-4 pt-0 pb-9 rounded-md border border-gray-300 shadow-sm flex flex-col transition-all duration-300 ${isPaletteCollapsed ? 'mr-[-320px]' : ''}`}>
+                        {/* Section tabs (General Aptitude, etc.) */}
             <div className="bg-gray-100 border-b flex items-center">
                 <button className="bg-gray-300 text-gray-700 p-1 mx-1">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -226,10 +278,6 @@ const TestInterface = () => {
                     </svg>
                 </button>
             </div>
-
-            {/* Main content */}
-            <main className="flex-1 overflow-y-hidden p-2 flex gap-2">
-                <div className={`flex-1 bg-white p-4 rounded-md border border-gray-300 shadow-sm flex flex-col transition-all duration-300 ${isPaletteCollapsed ? 'mr-[-320px]' : ''}`}>
                     <QuestionDisplay />
                 </div>
                 <div className={`transition-all duration-300 flex-shrink-0 ${isPaletteCollapsed ? 'w-10' : 'w-[320px]'}`}>
@@ -250,7 +298,7 @@ const TestInterface = () => {
             />
 
             {/* Calculator Quick Access Button */}
-            <div className="absolute top-[75px] right-[300px]">
+            {/* <div className="absolute top-[75px] right-[300px]">
                 <button 
                     onClick={toggleCalculator}
                     className="flex items-center justify-center bg-blue-500 text-white px-3 py-1.5 rounded-md shadow-md hover:bg-blue-600"
@@ -260,7 +308,7 @@ const TestInterface = () => {
                     </svg>
                     <span className="text-xs font-medium">Scientific Calculator</span>
                 </button>
-            </div>
+            </div> */}
 
             {/* Use the existing VirtualCalculator component */}
             {isCalculatorVisible && (
@@ -268,9 +316,9 @@ const TestInterface = () => {
             )}
 
             {/* Version info at the bottom */}
-            <div className="absolute bottom-0 right-0 bg-gray-700 text-white text-xs p-0.5 px-2">
+            {/* <div className="absolute bottom-0 right-0 bg-gray-700 text-white text-xs p-0.5 px-2">
                 Version : 17.07.00
-            </div>
+            </div> */}
         </div>
     );
 };

@@ -38,7 +38,7 @@ const TestFooter = ({ onMarkForReview, onClearResponse, onSaveAndNext, onPreviou
                  <button
                     onClick={onSubmit}
                     disabled={isSubmitting}
-                    className="bg-[#5cb85c] text-white font-bold px-10 py-2 rounded-md hover:bg-green-700 disabled:bg-green-800 shadow-sm border-b-2 border-green-800"
+                    className="bg-[#5cb85c] text-white font-bold px-10 py-2 w-80 mx-6 rounded-md hover:bg-green-700 disabled:bg-green-800 shadow-sm border-b-2 border-green-800"
                 >
                     {isSubmitting ? 'Submitting...' : 'Submit'}
                 </button>
