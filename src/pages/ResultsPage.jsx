@@ -3,11 +3,62 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getAttemptDetail } from '../services/api';
 
-// --- NEW HELPER COMPONENT ---
-// This component will safely render strings that contain simple HTML tags.
+// Enhanced RenderHTML component that handles both string and object content
 const RenderHTML = ({ content }) => {
   if (!content) return null;
-  const strContent = typeof content === 'string' ? content : String(content);
+  
+  // Case 1: Handle object-type tutorNotes with nested properties
+  if (typeof content === 'object' && !Array.isArray(content)) {
+    // Check if it's the specific tutorNotes structure we're expecting
+    if (content.coreConceptMissed || content.stepByStepSolution) {
+      return (
+        <div className="space-y-4">
+          {content.coreConceptMissed && (
+            <div>
+              <h5 className="font-semibold text-blue-800">Core Concept Missed:</h5>
+              <p className="mt-1">{content.coreConceptMissed}</p>
+            </div>
+          )}
+          {content.stepByStepSolution && (
+            <div>
+              <h5 className="font-semibold text-blue-800">Step-by-Step Solution:</h5>
+              <div className="mt-1 whitespace-pre-wrap">
+                {content.stepByStepSolution.split('\n').map((line, i) => (
+                  <p key={i} className={i > 0 ? "mt-2" : ""}>{line}</p>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+    // else{
+    //   typeof content ==='string' ? <span>{content}</span> : <span>{JSON.stringify(content)}</span>
+    // }
+    
+    // For other object types, try to convert to string
+    try {
+      return <span>{JSON.stringify(content)}</span>;
+    } catch (e) {
+      return <span>Unable to display content</span>;
+    }
+  }
+  
+  // Case 2: Handle array-type content
+  if (Array.isArray(content)) {
+    return (
+      <div>
+        {content.map((item, index) => (
+          <div key={index} className="mb-2">
+            <RenderHTML content={item} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+  
+  // Case 3: Handle string content (original functionality)
+  const strContent = String(content);
   const formattedContent = strContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   return <span dangerouslySetInnerHTML={{ __html: formattedContent }} />;
 };
@@ -68,6 +119,7 @@ const ResultsPage = () => {
   const scorePercentage = (score / maxScore) * 100;
 const correctCount = Math.floor((score / 100) * questions.length) || 0;
 const incorrectCount = feedback?.incorrectCount || (questions.length - correctCount);
+console.log('Results data:', results);
   // Helper to format answers as comma-separated values
   const formatAnswer = (ans) => Array.isArray(ans) ? ans.join(", ") : ans;
 
@@ -196,12 +248,13 @@ const incorrectCount = feedback?.incorrectCount || (questions.length - correctCo
                         </p>
                       </div>
 
+                      {/* Updated tutor notes section with better formatting */}
                       {review.tutorNotes && (
                         <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mt-4">
                           <h4 className="font-semibold text-blue-800 text-lg">Explanation:</h4>
-                          <p className="text-blue-900 mt-2">
+                          <div className="text-blue-900 mt-2">
                             <RenderHTML content={review.tutorNotes} />
-                          </p>
+                          </div>
                         </div>
                       )}
                     </div>
