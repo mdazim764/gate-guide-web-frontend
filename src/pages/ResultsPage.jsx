@@ -73,7 +73,7 @@ const ResultsPage = () => {
     const fetchResults = async () => {
       try {
         const response = await getAttemptDetail(attemptId);
-        // console.log('Fetched attempt details:', response.data);
+        console.log('Fetched attempt details:', response.data);
         setResults(response.data);
       } catch (err) {
         setError('Failed to fetch results. Please try again later.');
@@ -111,8 +111,9 @@ const ResultsPage = () => {
   }
   
   if (!results) return null;
-
+ 
   const { feedback, quiz } = results;
+  
   const questions = quiz?.questions || [];
   const score = results?.score || '0';
   const maxScore = feedback?.maxScore || '100';
@@ -184,45 +185,106 @@ console.log('Results data:', results);
           )}
 
           {/* Question-by-Question Review */}
-          {feedback?.questionByQuestionReview && (
-            <div className="mb-8">
+          <div className="mb-8">
               <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Question-by-Question Review</h2>
               <div className="space-y-6">
-                {feedback.questionByQuestionReview.map((review, index) => {
-                  const question = questions[index];
-                  
-                  return (
+                {feedback?.questionByQuestionReview && feedback.questionByQuestionReview.length > 0 ? (
+                  // --- Existing logic for when detailed feedback is available ---
+                  feedback.questionByQuestionReview.map((review, index) => {
+                    const question = questions[index];
+                    
+                    return (
+                      <div 
+                        key={index} 
+                        className={`bg-white p-6 rounded-lg shadow-md border ${
+                          review.isCorrect ? 'border-l-4 border-l-green-500' : 'border-l-4 border-l-red-500'
+                        }`}
+                      >
+                        <div className="flex justify-between items-start mb-4">
+                          <h3 className="text-xl font-bold text-gray-800">Question {index + 1}</h3>
+                          <span className={`px-4 py-1 text-sm rounded-full font-bold ${
+                            review.isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {review.isCorrect ? 'Correct' : 'Incorrect'}
+                          </span>
+                        </div>
+                        
+                        <div className="bg-gray-50 p-4 rounded-md mb-4">
+                          <p className="text-lg text-gray-800 mb-2 whitespace-pre-wrap">
+                            {question ? question.text : "Question text could not be loaded."}
+                          </p>
+                          
+                          {question?.options && (
+                            <div className="mt-3 space-y-2">
+                              {question.options.map((option, optIndex) => (
+                                <div 
+                                  key={optIndex}
+                                  className={`p-2 rounded ${
+                                    review.correctAnswer === option ? 
+                                    'bg-green-100 border-l-4 border-green-500' : 
+                                    review.yourAnswer === option ? 
+                                    'bg-red-100 border-l-4 border-red-500' : 
+                                    'bg-gray-50'
+                                  }`}
+                                >
+                                  {option}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="space-y-3 text-base border-t pt-3">
+                          <p>
+                            <span className="font-semibold text-gray-600">Your Answer:</span> 
+                            <span className={`ml-2 font-semibold ${review.isCorrect ? 'text-green-700' : 'text-red-700'}`}>
+                              {formatAnswer(review.yourAnswer) || 'Not Answered'}
+                            </span>
+                          </p>
+                          
+                          <p>
+                            <span className="font-semibold text-gray-600">Correct Answer:</span> 
+                            <span className="ml-2 font-semibold text-green-700">
+                              <RenderHTML content={formatAnswer(review.correctAnswer)} />
+                            </span>
+                          </p>
+                        </div>
+
+                        {/* Updated tutor notes section with better formatting */}
+                        {review.tutorNotes && (
+                          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mt-4">
+                            <h4 className="font-semibold text-blue-800 text-lg">Explanation:</h4>
+                            <div className="text-blue-900 mt-2">
+                              <RenderHTML content={review.tutorNotes} />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                ) : (
+                  // --- Fallback logic for when detailed feedback is NOT available ---
+                  questions.map((question, index) => (
                     <div 
                       key={index} 
-                      className={`bg-white p-6 rounded-lg shadow-md border ${
-                        review.isCorrect ? 'border-l-4 border-l-green-500' : 'border-l-4 border-l-red-500'
-                      }`}
+                      className="bg-white p-6 rounded-lg shadow-md border border-l-4 border-l-gray-400"
                     >
-                      <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-xl font-bold text-gray-800">Question {index + 1}</h3>
-                        <span className={`px-4 py-1 text-sm rounded-full font-bold ${
-                          review.isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                        }`}>
-                          {review.isCorrect ? 'Correct' : 'Incorrect'}
-                        </span>
-                      </div>
+                      <h3 className="text-xl font-bold text-gray-800 mb-4">Question {index + 1}</h3>
                       
                       <div className="bg-gray-50 p-4 rounded-md mb-4">
                         <p className="text-lg text-gray-800 mb-2 whitespace-pre-wrap">
-                          {question ? question.text : "Question text could not be loaded."}
+                          {question.text}
                         </p>
                         
-                        {question?.options && (
+                        {question.options && question.options.length > 0 && (
                           <div className="mt-3 space-y-2">
                             {question.options.map((option, optIndex) => (
                               <div 
                                 key={optIndex}
                                 className={`p-2 rounded ${
-                                  review.correctAnswer === option ? 
-                                  'bg-green-100 border-l-4 border-green-500' : 
-                                  review.yourAnswer === option ? 
-                                  'bg-red-100 border-l-4 border-red-500' : 
-                                  'bg-gray-50'
+                                  question.correctAnswer === option 
+                                  ? 'bg-green-100 border-l-4 border-green-500' 
+                                  : 'bg-gray-50'
                                 }`}
                               >
                                 {option}
@@ -234,35 +296,27 @@ console.log('Results data:', results);
 
                       <div className="space-y-3 text-base border-t pt-3">
                         <p>
-                          <span className="font-semibold text-gray-600">Your Answer:</span> 
-                          <span className={`ml-2 font-semibold ${review.isCorrect ? 'text-green-700' : 'text-red-700'}`}>
-                            {formatAnswer(review.yourAnswer) || 'Not Answered'}
-                          </span>
-                        </p>
-                        
-                        <p>
                           <span className="font-semibold text-gray-600">Correct Answer:</span> 
                           <span className="ml-2 font-semibold text-green-700">
-                            <RenderHTML content={formatAnswer(review.correctAnswer)} />
+                            <RenderHTML content={formatAnswer(question.correctAnswer)} />
                           </span>
                         </p>
                       </div>
 
-                      {/* Updated tutor notes section with better formatting */}
-                      {review.tutorNotes && (
+                      {question.explanation && (
                         <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mt-4">
                           <h4 className="font-semibold text-blue-800 text-lg">Explanation:</h4>
                           <div className="text-blue-900 mt-2">
-                            <RenderHTML content={review.tutorNotes} />
+                            <RenderHTML content={question.explanation} />
                           </div>
                         </div>
                       )}
                     </div>
-                  );
-                })}
+                  ))
+                )}
               </div>
             </div>
-          )}
+
           
           {/* Navigation buttons */}
           <div className="flex justify-between mt-8 pt-4 border-t">
